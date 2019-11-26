@@ -1,4 +1,5 @@
 # Cartelera
+<strong>Práctica 1.1<br/></strong>
 -[OK]MainActivity -> ListView<br>
 -[OK]VerPeli -> nombre, sinop...<br>
 -[OK]Peli -> Atributos:<br>
