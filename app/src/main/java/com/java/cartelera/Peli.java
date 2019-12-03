@@ -1,5 +1,7 @@
 package com.java.cartelera;
 
+import android.graphics.Bitmap;
+
 import java.util.Date;
 
 public class Peli {
@@ -9,22 +11,29 @@ public class Peli {
     private Date fecha_salida;
     private String reparto;
     private int duracion;
+    private boolean fav;
+    private Bitmap imagen;
 
-    public Peli(int ID, String nombre, String sinopsis, Date fecha_salida, String reparto, int duracion) {
+    //Constructor para recibir desde DB
+    public Peli(int ID, String nombre, String sinopsis, Date fecha_salida, String reparto, int duracion, boolean fav, Bitmap imagen) {
         this.ID = ID;
         this.nombre = nombre;
         this.sinopsis = sinopsis;
         this.fecha_salida = fecha_salida;
         this.reparto = reparto;
         this.duracion = duracion;
+        this.fav = fav;
+        this.imagen = imagen;
     }
 
-    public Peli(String nombre, String sinopsis, Date fecha_salida, String reparto, int duracion) {
+    //Constructor para crear Peli a mano + setImagen()
+    public Peli(String nombre, String sinopsis, Date fecha_salida, String reparto, int duracion, boolean fav) {
         this.nombre = nombre;
         this.sinopsis = sinopsis;
         this.fecha_salida = fecha_salida;
         this.reparto = reparto;
         this.duracion = duracion;
+        this.fav = fav;
     }
 
     public Peli(){}
@@ -76,6 +85,22 @@ public class Peli {
     public void setDuracion(int duracion) {
         this.duracion = duracion;
     }
+
+    public boolean isFav() { return fav; }
+
+    public boolean setFav() {
+        fav = !fav;
+        return fav;
+    }
+
+    public boolean setFav(boolean fav) {
+        this.fav = fav;
+        return fav;
+    }
+
+    public Bitmap getImagen() { return imagen; }
+
+    public void setImagen(Bitmap imagen) { this.imagen = imagen; }
 
     public String toString(){ return nombre; }
 }

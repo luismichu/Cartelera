@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Cartelera</string>
+    <string name="favoritos">Favoritos</string>
+    <string name="a_adir_peli">Añadir peli</string>
+    <string name="acerca_de">Acerca de</string>
+    <string name="a_adir_a_favoritos">Añadir a favoritos</string>
+    <string name="eliminar">Eliminar</string>
 </resources>

@@ -3,5 +3,8 @@
 
     <item
         android:id="@+id/itemFavoritos"
-        android:title="Añadir a favoritos" />
+        android:title="@string/a_adir_a_favoritos" />
+    <item
+        android:id="@+id/itemEliminar"
+        android:title="@string/eliminar" />
 </menu>

@@ -7,7 +7,7 @@
     tools:context=".InsertarPeli">
 
     <ImageView
-        android:id="@+id/caratula"
+        android:id="@+id/it_caratula"
         android:layout_width="106dp"
         android:layout_height="106dp"
         android:layout_marginStart="32dp"
@@ -15,10 +15,10 @@
         android:layout_marginTop="32dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@mipmap/ic_launcher_round" />
+        app:srcCompat="@drawable/default_img" />
 
     <EditText
-        android:id="@+id/etNombre"
+        android:id="@+id/it_etNombre"
         android:layout_width="227dp"
         android:layout_height="51dp"
         android:layout_marginStart="17dp"
@@ -30,7 +30,7 @@
         android:inputType="text"
         android:textSize="30sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/caratula"
+        app:layout_constraintStart_toEndOf="@+id/it_caratula"
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
@@ -42,11 +42,11 @@
         android:layout_marginTop="20dp"
         android:hint="fecha"
         android:inputType="text"
-        app:layout_constraintStart_toEndOf="@+id/caratula"
-        app:layout_constraintTop_toBottomOf="@+id/etNombre" />
+        app:layout_constraintStart_toEndOf="@+id/it_caratula"
+        app:layout_constraintTop_toBottomOf="@+id/it_etNombre" />
 
     <EditText
-        android:id="@+id/etDuracion"
+        android:id="@+id/it_etDuracion"
         android:layout_width="110dp"
         android:layout_height="39dp"
         android:layout_marginStart="8dp"
@@ -57,7 +57,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/etFecha_salida"
-        app:layout_constraintTop_toBottomOf="@+id/etNombre" />
+        app:layout_constraintTop_toBottomOf="@+id/it_etNombre" />
 
     <EditText
         android:id="@+id/etSinopsis"
@@ -72,7 +72,7 @@
         android:inputType="text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/caratula" />
+        app:layout_constraintTop_toBottomOf="@+id/it_caratula" />
 
     <EditText
         android:id="@+id/etReparto"
@@ -80,7 +80,7 @@
         android:layout_height="0dp"
         android:layout_marginStart="30dp"
         android:layout_marginLeft="30dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="28dp"
         android:layout_marginEnd="31dp"
         android:layout_marginRight="31dp"
         android:hint="reparto"
@@ -88,6 +88,16 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/etSinopsis" />
+
+    <CheckBox
+        android:id="@+id/fav"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="28dp"
+        android:text="Favoritos"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/etReparto" />
 
     <Button
         android:id="@+id/btInsertar"
