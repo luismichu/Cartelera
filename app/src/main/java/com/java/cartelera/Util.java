@@ -1,16 +1,9 @@
 package com.java.cartelera;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
-
-import static com.java.cartelera.MainActivity.db;
 
 public class Util {
     /**

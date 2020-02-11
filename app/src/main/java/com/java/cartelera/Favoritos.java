@@ -7,7 +7,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.ContextMenu;
-import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,7 +18,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
-import static com.java.cartelera.MainActivity.db;
+import static com.java.cartelera.PrincipalActivity.db;
 
 public class Favoritos extends AppCompatActivity implements AdapterView.OnItemClickListener, View.OnClickListener {
     private ArrayList<Peli> pelisFav;
