@@ -1,64 +1,66 @@
 package com.java.cartelera;
 
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.ContextMenu;
+import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Date;
 
-import static com.java.cartelera.PrincipalActivity.db;
+public class PrincipalFragment extends Fragment implements AdapterView.OnItemClickListener {
+    public ArrayList<Peli> pelis;
+    public PeliAdapter adaptador;
+    public static DataBase db;
+    private Menu menu;
 
-public class Favoritos extends AppCompatActivity implements AdapterView.OnItemClickListener, View.OnClickListener {
-    private ArrayList<Peli> pelisFav;
-    private ArrayAdapter<Peli> adaptador;
+    public PrincipalFragment(){}
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_favoritos);
+    public View onCreateView(LayoutInflater inflater,
+                                ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_principal, container, false);
+    }
 
-        pelisFav = new ArrayList<>();
-        adaptador = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, pelisFav);
-        ListView lvPelisFav = findViewById(R.id.lvFav);
-        lvPelisFav.setAdapter(adaptador);
-        lvPelisFav.setOnItemClickListener(this);
-        registerForContextMenu(lvPelisFav);
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        pelis = new ArrayList<>();
+        adaptador = new PeliAdapter(getContext(), pelis);
+        ListView lvPelis = getActivity().findViewById(R.id.lvPelis);
+        lvPelis.setAdapter(adaptador);
+        lvPelis.setOnItemClickListener(this);
+        registerForContextMenu(lvPelis);
 
-        Button btRegresar = findViewById(R.id.btRegresar);
-        btRegresar.setOnClickListener(this);
+        db = new DataBase(getContext());
     }
 
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        Intent verPeli = new Intent(this, VerPeli.class);
-        Peli peliFav = db.getFav().get(i);
-        ArrayList<Peli> pelis = db.getPelis();
-        int pos = 0;
-        for(Peli peli:pelis){
-            if(peli.getID() == peliFav.getID())
-                pos = pelis.indexOf(peli);
-        }
-        verPeli.putExtra("Peli", String.valueOf(pos));
+        Intent verPeli = new Intent(getContext(), VerPeli.class);
+        verPeli.putExtra("Peli", String.valueOf(i));
         startActivity(verPeli);
     }
 
+    @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
-        MenuInflater inflater = getMenuInflater();
+        this.menu = menu;
+        MenuInflater inflater = getActivity().getMenuInflater();
         inflater.inflate(R.menu.menu_favoritos, menu);
-        MenuItem item = menu.findItem(R.id.itemFavoritos);
-        item.setTitle("Quitar de favoritos");
     }
 
     @Override
@@ -69,13 +71,14 @@ public class Favoritos extends AppCompatActivity implements AdapterView.OnItemCl
 
         switch (item.getItemId()) {
             case R.id.itemFavoritos:
-                Peli peli = pelisFav.remove(itemSeleccionado);
+                Peli peli = pelis.get(itemSeleccionado);
                 peli.setFav();
                 adaptador.notifyDataSetChanged();
                 db.updateFav(db.getPelis().get(itemSeleccionado).getID(), peli.isFav());
+                cambiarMenu(peli.isFav());
                 return true;
             case R.id.itemEliminar:
-                dialogoConfirmar(pelisFav.get(itemSeleccionado));
+                dialogoConfirmar(pelis.get(itemSeleccionado));
                 return true;
             default:
                 return super.onContextItemSelected(item);
@@ -83,7 +86,7 @@ public class Favoritos extends AppCompatActivity implements AdapterView.OnItemCl
     }
 
     public void dialogoConfirmar(final Peli peli) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setMessage("Eliminar pelicula")
                 .setPositiveButton("Si", new DialogInterface.OnClickListener() {
                     @Override
@@ -91,8 +94,8 @@ public class Favoritos extends AppCompatActivity implements AdapterView.OnItemCl
                         String nombre = peli.getNombre();
                         db.eliminarFila(peli);
                         dialog.dismiss();
-                        Toast.makeText(getApplicationContext(), "Pelicula "+nombre+" eliminada correctamente", Toast.LENGTH_SHORT).show();
-                        pelisFav.remove(pelisFav.indexOf(peli));
+                        Toast.makeText(getContext(), "Pelicula "+nombre+" eliminada correctamente", Toast.LENGTH_SHORT).show();
+                        pelis.remove(peli);
                         adaptador.notifyDataSetChanged();
                     }
                 })
@@ -105,19 +108,19 @@ public class Favoritos extends AppCompatActivity implements AdapterView.OnItemCl
         builder.create().show();
     }
 
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.btRegresar:
-                onBackPressed();
-                break;
-        }
+    private void cambiarMenu(boolean fav){
+        MenuItem item = menu.findItem(R.id.itemFavoritos);
+        if(fav)
+            item.setTitle("Quitar de favoritos");
+        else
+            item.setTitle("Añadir a favoritos");
     }
 
     @Override
-    protected void onResume() {
+    public void onResume() {
         super.onResume();
-        pelisFav.clear();
-        pelisFav.addAll(db.getFav());
+        pelis.clear();
+        pelis.addAll(db.getPelis());
         adaptador.notifyDataSetChanged();
     }
 }

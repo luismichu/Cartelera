@@ -5,4 +5,7 @@
     <string name="acerca_de">Acerca de</string>
     <string name="a_adir_a_favoritos">Añadir a favoritos</string>
     <string name="eliminar">Eliminar</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

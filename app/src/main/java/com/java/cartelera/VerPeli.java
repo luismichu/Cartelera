@@ -31,7 +31,7 @@ public class VerPeli extends AppCompatActivity implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ver_peli);
 
-        db = new DataBase(this);
+        db = PrincipalFragment.db;
 
         Intent verPeli = getIntent();
 

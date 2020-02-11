@@ -1,8 +1,5 @@
 package com.java.cartelera;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.viewpager.widget.ViewPager;
-
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -10,10 +7,12 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.viewpager.widget.ViewPager;
+
 import com.google.android.material.tabs.TabLayout;
 
-public class MainActivity extends AppCompatActivity {
-    private Menu menu;
+public class MainActivity extends AppCompatActivity{
     TabLayout tabLayout;
     ViewPager viewPager;
 
@@ -25,10 +24,10 @@ public class MainActivity extends AppCompatActivity {
         tabLayout = findViewById(R.id.tabLayout);
         viewPager = findViewById(R.id.vPager);
 
-        PrincipalPagerAdapter ppa = new PrincipalPagerAdapter(getSupportFragmentManager());
+        AdaptaPag ppa = new AdaptaPag(getSupportFragmentManager(), 2);
         viewPager.setAdapter(ppa);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
-/*        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 viewPager.setCurrentItem(tab.getPosition());
@@ -39,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
             }
-        });*/
+        });
     }
 
     @Override
