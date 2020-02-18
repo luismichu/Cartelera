@@ -26,9 +26,9 @@ public class DataBase extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("CREATE TABLE " + TABLA_PELIS + "(" + _ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+        db.execSQL("CREATE TABLE " + TABLA_PELIS + "(" + _ID + " INTEGER, "
                 + NOMBRE + " TEXT, " + SINOPSIS + " TEXT, " + FECHA_SALIDA + " TEXT, "
-                + REPARTO + " TEXT, " + DURACION + " INTEGER, " + FAV + " INTEGER, " + IMAGEN + " BLOB)");
+                + REPARTO + " TEXT, " + DURACION + " INTEGER, " + FAV + " INTEGER)");
     }
 
     @Override
@@ -37,28 +37,25 @@ public class DataBase extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public void insertarFila(Peli peli){
+    public void insertarFila(PeliFB peli){
         SQLiteDatabase db = getWritableDatabase();
 
         ContentValues values = new ContentValues();
+        values.put(_ID, peli.getID());
         values.put(NOMBRE, peli.getNombre());
         values.put(SINOPSIS, peli.getSinopsis());
-        DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-        values.put(FECHA_SALIDA, df.format(peli.getFecha_salida()));
+        //DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+        //values.put(FECHA_SALIDA, df.format(peli.getFecha_salida()));
+        values.put(FECHA_SALIDA, peli.getFecha_salida());
         values.put(REPARTO, peli.getReparto());
         values.put(DURACION, peli.getDuracion());
         values.put(FAV, peli.isFav());
-        try {
-            values.put(IMAGEN, Util.getBytes(peli.getImagen()));
-        } catch(Exception e){
-            e.printStackTrace();
-        }
 
         db.insertOrThrow(TABLA_PELIS, null, values);
         db.close();
     }
 
-    public void eliminarFila(Peli peli) {
+    public void eliminarFila(PeliFB peli) {
         SQLiteDatabase db = getWritableDatabase();
 
         String[] argumentos = new String[]{String.valueOf(peli.getID())};
@@ -66,27 +63,19 @@ public class DataBase extends SQLiteOpenHelper {
         db.close();
     }
 
-    public ArrayList<Peli> getFilas(Cursor cursor) {
-        ArrayList<Peli> listaPelis = new ArrayList<>();
-        Peli peli = null;
+    public ArrayList<PeliFB> getFilas(Cursor cursor) {
+        ArrayList<PeliFB> listaPelis = new ArrayList<>();
+        PeliFB peli = null;
         while (cursor.moveToNext()) {
-            peli = new Peli();
+            peli = new PeliFB();
             peli.setID(cursor.getInt(0));
             peli.setNombre(cursor.getString(1));
             peli.setSinopsis(cursor.getString(2));
-            try {
-                peli.setFecha_salida(new SimpleDateFormat("dd/MM/yyyy").parse(cursor.getString(3)));
-            } catch(ParseException pe){
-                pe.printStackTrace();
-            }
+            peli.setFecha_salida(cursor.getString(3));
             peli.setReparto(cursor.getString(4));
             peli.setDuracion(Integer.valueOf(cursor.getString(5)));
             peli.setFav(cursor.getInt(6) >= 1);
-            try {
-                peli.setImagen(Util.getBitmap(cursor.getBlob(7)));
-            } catch(Exception e){
-                e.printStackTrace();
-            }
+
             listaPelis.add(peli);
         }
         cursor.close();
@@ -94,7 +83,7 @@ public class DataBase extends SQLiteOpenHelper {
         return listaPelis;
     }
 
-    public ArrayList<Peli> getPelis(){
+    public ArrayList<PeliFB> getPelis(){
         SQLiteDatabase db = getReadableDatabase();
         Cursor cursor = db.query(TABLA_PELIS, SELECT, null, null, null, null,
                 ORDER_BY);
@@ -102,7 +91,7 @@ public class DataBase extends SQLiteOpenHelper {
         return getFilas(cursor);
     }
 
-    public Peli getPeli(int id){
+    public PeliFB getPeli(int id) throws Exception{
         SQLiteDatabase db = getReadableDatabase();
         Cursor cursor = db.query(TABLA_PELIS, SELECT, _ID + "=" +id, null, null, null,
                 ORDER_BY);
@@ -110,7 +99,7 @@ public class DataBase extends SQLiteOpenHelper {
         return getFilas(cursor).get(0);
     }
 
-    public ArrayList<Peli> getFav(){
+    public ArrayList<PeliFB> getFav(){
         SQLiteDatabase db = getReadableDatabase();
         Cursor cursor = db.query(TABLA_PELIS, SELECT, FAV + ">= 1", null, null, null,
                 ORDER_BY);
@@ -118,7 +107,7 @@ public class DataBase extends SQLiteOpenHelper {
         return getFilas(cursor);
     }
 
-    public ArrayList<Peli> getNoFav(){
+    public ArrayList<PeliFB> getNoFav(){
         SQLiteDatabase db = getReadableDatabase();
         Cursor cursor = db.query(TABLA_PELIS, SELECT, FAV + "= 0", null, null, null,
                 ORDER_BY);

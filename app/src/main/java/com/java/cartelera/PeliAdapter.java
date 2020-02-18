@@ -1,6 +1,9 @@
 package com.java.cartelera;
 
 import android.content.Context;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,10 +17,10 @@ import java.util.ArrayList;
 public class PeliAdapter extends BaseAdapter {
 
     private Context contexto;
-    private ArrayList<Peli> listaPelis;
+    private ArrayList<PeliFB> listaPelis;
     private LayoutInflater lyInf;
 
-    public PeliAdapter(Context contexto, ArrayList<Peli> listaPelis) {
+    public PeliAdapter(Context contexto, ArrayList<PeliFB> listaPelis) {
         this.contexto = contexto;
         this.listaPelis = listaPelis;
         lyInf = LayoutInflater.from(contexto);
@@ -46,8 +49,9 @@ public class PeliAdapter extends BaseAdapter {
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
-        Peli peli = listaPelis.get(position);
-        viewHolder.caratula.setImageBitmap(peli.getImagen());
+        PeliFB peli = listaPelis.get(position);
+        viewHolder.caratula.setImageBitmap(BitmapFactory.decodeResource(contexto.getResources(),
+                R.drawable.default_img));
         viewHolder.nombre.setText(peli.getNombre());
         viewHolder.duracion.setText("Duración: " + peli.getDuracion());
         viewHolder.fav.setChecked(peli.isFav());

@@ -24,10 +24,10 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class PrincipalFragment extends Fragment implements AdapterView.OnItemClickListener {
-    public ArrayList<Peli> pelis;
-    public PeliAdapter adaptador;
+    public static ArrayList<PeliFB> pelis;
+    public static PeliAdapter adaptador;
     public static DataBase db;
-    private Menu menu;
+    public static Menu menu;
 
     public PrincipalFragment(){}
 
@@ -55,65 +55,28 @@ public class PrincipalFragment extends Fragment implements AdapterView.OnItemCli
         startActivity(verPeli);
     }
 
-    @Override
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        super.onCreateContextMenu(menu, v, menuInfo);
-        this.menu = menu;
-        MenuInflater inflater = getActivity().getMenuInflater();
-        inflater.inflate(R.menu.menu_favoritos, menu);
+    public static void itemFavoritos(int itemSeleccionado){
+        PeliFB peli = pelis.get(itemSeleccionado);
+        peli.setFav();
+        adaptador.notifyDataSetChanged();
+        db.updateFav(db.getPelis().get(itemSeleccionado).getID(), peli.isFav());
+        cambiarMenu(peli.isFav());
     }
 
-    @Override
-    public boolean onContextItemSelected(MenuItem item) {
-        AdapterView.AdapterContextMenuInfo info =
-                (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-        final int itemSeleccionado = info.position;
-
-        switch (item.getItemId()) {
-            case R.id.itemFavoritos:
-                Peli peli = pelis.get(itemSeleccionado);
-                peli.setFav();
-                adaptador.notifyDataSetChanged();
-                db.updateFav(db.getPelis().get(itemSeleccionado).getID(), peli.isFav());
-                cambiarMenu(peli.isFav());
-                return true;
-            case R.id.itemEliminar:
-                dialogoConfirmar(pelis.get(itemSeleccionado));
-                return true;
-            default:
-                return super.onContextItemSelected(item);
-        }
-    }
-
-    public void dialogoConfirmar(final Peli peli) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setMessage("Eliminar pelicula")
-                .setPositiveButton("Si", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        String nombre = peli.getNombre();
-                        db.eliminarFila(peli);
-                        dialog.dismiss();
-                        Toast.makeText(getContext(), "Pelicula "+nombre+" eliminada correctamente", Toast.LENGTH_SHORT).show();
-                        pelis.remove(peli);
-                        adaptador.notifyDataSetChanged();
-                    }
-                })
-                .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
-        builder.create().show();
-    }
-
-    private void cambiarMenu(boolean fav){
+    private static void cambiarMenu(boolean fav){
         MenuItem item = menu.findItem(R.id.itemFavoritos);
         if(fav)
             item.setTitle("Quitar de favoritos");
         else
             item.setTitle("Añadir a favoritos");
+    }
+
+    public static void actualizar(){
+        if (pelis != null) {
+            pelis.clear();
+            pelis.addAll(db.getPelis());
+            adaptador.notifyDataSetChanged();
+        }
     }
 
     @Override

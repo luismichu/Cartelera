@@ -51,7 +51,7 @@ public class InsertarPeli extends AppCompatActivity implements View.OnClickListe
                 CheckBox fav = findViewById(R.id.fav);
 
                 boolean correcto = false;
-                Peli peli = new Peli();
+                PeliFB peli = new PeliFB();
 
                 if(etNombre.getText().toString().equals("") ||
                         etFecha_salida.getText().toString().equals("") ||
@@ -63,24 +63,11 @@ public class InsertarPeli extends AppCompatActivity implements View.OnClickListe
                 } else{
                     correcto = true;
                     peli.setNombre(etNombre.getText().toString());
-                    try {
-                        peli.setFecha_salida(new SimpleDateFormat("dd/MM/yyyy").parse(etFecha_salida.getText().toString()));
-                    } catch (ParseException pe) {
-                        Toast.makeText(this, "Formato de fecha no válido", Toast.LENGTH_SHORT).show();
-                        correcto = false;
-                        etFecha_salida.requestFocus();
-                    }
+                    peli.setFecha_salida(etFecha_salida.getText().toString());
                     peli.setDuracion(Integer.valueOf(etDuracion.getText().toString()));
                     peli.setSinopsis(etSinopsis.getText().toString());
                     peli.setReparto(etReparto.getText().toString());
                     peli.setFav(fav.isChecked());
-                    try {
-                        peli.setImagen(((BitmapDrawable) caratula.getDrawable()).getBitmap());
-                    } catch(Exception e){
-                        Toast.makeText(this, "Error de imagen", Toast.LENGTH_SHORT).show();
-                        caratula.setImageResource(R.drawable.default_img);
-                        peli.setImagen(((BitmapDrawable) caratula.getDrawable()).getBitmap());
-                    }
                 }
                 if(correcto){
                     new DataBase(this).insertarFila(peli);

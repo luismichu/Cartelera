@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.ContextMenu;
 import android.view.Menu;
@@ -22,7 +23,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
 public class VerPeli extends AppCompatActivity implements View.OnClickListener {
-    private static Peli peli;
+    private static PeliFB peli;
     private static DataBase db;
     private Menu menu;
 
@@ -42,11 +43,12 @@ public class VerPeli extends AppCompatActivity implements View.OnClickListener {
 
         ((TextView)findViewById(R.id.it_etNombre)).setText(peli.getNombre());
         DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-        ((TextView)findViewById(R.id.etFecha_salida)).setText(df.format(peli.getFecha_salida()));
+        ((TextView)findViewById(R.id.etFecha_salida)).setText(peli.getFecha_salida());
         ((TextView)findViewById(R.id.it_etDuracion)).setText(String.valueOf(peli.getDuracion()));
         ((TextView)findViewById(R.id.etSinopsis)).setText(peli.getSinopsis());
         ((TextView)findViewById(R.id.etReparto)).setText(peli.getReparto());
-        ((ImageView)findViewById(R.id.it_caratula)).setImageBitmap(peli.getImagen());
+        ((ImageView)findViewById(R.id.it_caratula)).setImageBitmap(BitmapFactory.decodeResource(this.getResources(),
+                R.drawable.default_img));
         ((CheckBox)findViewById(R.id.chkFav)).setChecked(peli.isFav());
     }
 
@@ -88,7 +90,7 @@ public class VerPeli extends AppCompatActivity implements View.OnClickListener {
         return super.onOptionsItemSelected(item);
     }
 
-    public void dialogoConfirmar(final Peli peli) {
+    public void dialogoConfirmar(final PeliFB peli) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage("Eliminar pelicula")
                 .setPositiveButton("Si", new DialogInterface.OnClickListener() {
