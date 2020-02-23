@@ -3,8 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/itemFav"
-        android:title="@string/favoritos" />
+        android:id="@+id/itemConf"
+        android:title="@string/configuraci_n" />
     <item
         android:id="@+id/itemAnadirPeli"
         android:title="@string/a_adir_peli" />

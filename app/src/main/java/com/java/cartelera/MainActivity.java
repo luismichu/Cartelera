@@ -3,6 +3,10 @@ package com.java.cartelera;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.ContextMenu;
@@ -14,6 +18,7 @@ import android.widget.AdapterView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.preference.PreferenceManager;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.tabs.TabLayout;
@@ -34,6 +39,8 @@ public class MainActivity extends AppCompatActivity{
     private int pos;
     private DatabaseReference ref;
     private ArrayList<PeliFB> listaPelis;
+    private String tema;
+    private final String CLARO = "CLARO", OSCURO = "OSCURO";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +63,13 @@ public class MainActivity extends AppCompatActivity{
                     PrincipalFragment.actualizar();
                 else
                     FavoritosFragment.actualizar();
+/*
+                SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+                String strUserName = SP.getString("username", "NA");
+                boolean bAppUpdates = SP.getBoolean("applicationUpdates",false);
+                String downloadType = SP.getString("downloadType","1");
+
+                Log.i("nombreusuario", strUserName);*/
             }
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
@@ -99,6 +113,9 @@ public class MainActivity extends AppCompatActivity{
             }
         };
         ref.addListenerForSingleValueEvent(postListener);
+
+        SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        tema = SP.getBoolean("night_mode",false)? OSCURO : CLARO;
     }
 
     @Override
@@ -110,6 +127,11 @@ public class MainActivity extends AppCompatActivity{
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()){
+            case R.id.itemConf:
+                Intent conf = new Intent(this, Configuracion.class);
+                startActivity(conf);
+                return true;
+
             case R.id.itemAnadirPeli:
                 Intent insertarPeli = new Intent(MainActivity.this, InsertarPeli.class);
                 startActivity(insertarPeli);
@@ -221,17 +243,42 @@ public class MainActivity extends AppCompatActivity{
             item.setTitle("Añadir a favoritos");
     }
 
+    public void reCreate() {
+        Bundle savedInstanceState = new Bundle();
+        //this is important to save all your open states/fragment states
+        onSaveInstanceState(savedInstanceState);
+        //this is needed to release the resources
+        super.onDestroy();
+
+        //call on create where new theme is applied
+        onCreate(savedInstanceState);//you can pass bundle arguments to skip your code/flows on this scenario
+    }
+
+    @Override
+    public Resources.Theme getTheme() {
+        Resources.Theme theme = super.getTheme();
+        SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+
+        if(SP.getBoolean("night_mode",false)){
+            if(tema == null)
+                tema = SP.getBoolean("night_mode",false)? OSCURO : CLARO;
+            else if(tema.equals(CLARO)) {
+                theme = super.getTheme();
+                theme.applyStyle(R.style.AppThemeDark, true);
+                reCreate();
+                Log.i("aaaaaaaaaa", "recargado");
+                tema = OSCURO;
+            }
+        }
+        else tema = CLARO;
+
+        return theme;
+    }
+
     @Override
     public void onResume() {
         super.onResume();
-        /*
-        FavoritosFragment.pelisFav.clear();
-        FavoritosFragment.pelisFav.addAll(db.getFav());
-        FavoritosFragment.adaptador.notifyDataSetChanged();
 
-        PrincipalFragment.pelis.clear();
-        PrincipalFragment.pelis.addAll(db.getPelis());
-        PrincipalFragment.adaptador.notifyDataSetChanged();
-        */
+
     }
 }

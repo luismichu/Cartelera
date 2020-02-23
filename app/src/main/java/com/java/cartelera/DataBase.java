@@ -17,7 +17,7 @@ import static com.java.cartelera.Constantes.*;
 public class DataBase extends SQLiteOpenHelper {
     private static final int VERSION = 1;
     private final String[] SELECT = new String[]{_ID, NOMBRE, SINOPSIS, FECHA_SALIDA,
-                                                 REPARTO, DURACION, FAV, IMAGEN};
+                                                 REPARTO, DURACION, FAV};
     private final String ORDER_BY = "fecha_salida";
 
     public DataBase(Context contexto) {
