@@ -2,10 +2,13 @@ package com.java.cartelera;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.preference.PreferenceManager;
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
@@ -95,6 +98,18 @@ public class InsertarPeli extends AppCompatActivity implements View.OnClickListe
                 }
                 break;
         }
+    }
+
+    @Override
+    public Resources.Theme getTheme() {
+        Resources.Theme theme = super.getTheme();
+        SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        if(SP.getBoolean("night_mode", false))
+            theme.applyStyle(R.style.AppThemeDark, true);
+        else
+            theme.applyStyle(R.style.AppTheme, true);
+
+        return theme;
     }
 
     @Override

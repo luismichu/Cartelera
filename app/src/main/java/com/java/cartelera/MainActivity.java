@@ -129,7 +129,7 @@ public class MainActivity extends AppCompatActivity{
                 return true;
 
             case R.id.itemAnadirPeli:
-                Intent insertarPeli = new Intent(MainActivity.this, InsertarPeli.class);
+                Intent insertarPeli = new Intent(MainActivity.this, Mapa.class);
                 startActivity(insertarPeli);
                 return true;
 
@@ -248,7 +248,6 @@ public class MainActivity extends AppCompatActivity{
         else
             theme.applyStyle(R.style.AppTheme, true);
 
-        //recreate();
         return theme;
     }
 

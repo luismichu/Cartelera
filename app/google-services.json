@@ -1,0 +1,56 @@
+{
+  "project_info": {
+    "project_number": "934682261803",
+    "firebase_url": "https://cartelera-2350c.firebaseio.com",
+    "project_id": "cartelera-2350c",
+    "storage_bucket": "cartelera-2350c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:934682261803:android:b0a6f453d2d3eedc0c2d6e",
+        "android_client_info": {
+          "package_name": "com.java.cartelera"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "934682261803-bse2hnmnps23hf1nh28t9596fn5g1g4j.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.java.cartelera",
+            "certificate_hash": "4a2d67287b342c2b0fa2f08e81ebf1d673bd584b"
+          }
+        },
+        {
+          "client_id": "934682261803-l34vvm2ll5i45d1mgh9ntgeromu0irva.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.java.cartelera",
+            "certificate_hash": "ad435433b0d428318042d00b8431a44acedacb84"
+          }
+        },
+        {
+          "client_id": "934682261803-6dacjpk4p71ug6tu7mjmmitlfq9lnaco.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCXlJyZ8A5y5uwAz6f0VVIlLQBzDz1_iJA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "934682261803-6dacjpk4p71ug6tu7mjmmitlfq9lnaco.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
