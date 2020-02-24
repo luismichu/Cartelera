@@ -5,6 +5,7 @@
         <SwitchPreference
             app:key="night_mode"
             app:title="Modo nocturno"
+            app:summary="La aplicación requiere un reinicio"
             app:useSimpleSummaryProvider="true" />
 
         <SwitchPreference

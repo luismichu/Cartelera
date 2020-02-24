@@ -1,19 +1,30 @@
 package com.java.cartelera;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceManager;
 
+import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK;
+import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
+import static android.content.Intent.FLAG_ACTIVITY_NO_ANIMATION;
+
 public class Configuracion extends AppCompatActivity {
+    static boolean theme;
+    private SharedPreferences SP;
+    private SharedPreferences.OnSharedPreferenceChangeListener spChanged;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,33 +39,30 @@ public class Configuracion extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        SharedPreferences.OnSharedPreferenceChangeListener spChanged = new
-            SharedPreferences.OnSharedPreferenceChangeListener() {
-                @Override
-                public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
-                                                      String key) {
-                    Log.i("aaaaaaaaaaaaaaa", "pulsado");
-                    if(key.equals("night_mode")){
-                        Log.i("aaaaaaaaaaaaaaa", "pulsado");
-                        SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-                        setTheme(SP.getBoolean("night_mode",false)? R.style.AppThemeDark : R.style.AppTheme);
-                        Intent intent = new Intent(Configuracion.this, Configuracion.class);
-                        startActivity(intent);
-                        finish();
-
+        spChanged = new
+                SharedPreferences.OnSharedPreferenceChangeListener() {
+                    @Override
+                    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+                        final SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+                        if(key.equals("night_mode") && theme != SP.getBoolean("night_mode",false)){
+                            theme = SP.getBoolean("night_mode",false);
+                            Intent intent = new Intent(getBaseContext(), MainActivity.class);
+                            intent.setFlags(FLAG_ACTIVITY_NEW_TASK | FLAG_ACTIVITY_CLEAR_TASK | FLAG_ACTIVITY_NO_ANIMATION);
+                            finish();
+                            startActivity(intent);
+                        }
                     }
-                }
-            };
-
-        SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+                };
+        SP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         SP.registerOnSharedPreferenceChangeListener(spChanged);
+        theme = SP.getBoolean("night_mode",false);
     }
 
     @Override
     public Resources.Theme getTheme() {
         Resources.Theme theme = super.getTheme();
         SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-        if(SP.getBoolean("night_mode",false))
+        if (SP.getBoolean("night_mode", false))
             theme.applyStyle(R.style.AppThemeDark, true);
         else
             theme.applyStyle(R.style.AppTheme, true);
@@ -72,5 +80,7 @@ public class Configuracion extends AppCompatActivity {
     @Override
     public void onResume(){
         super.onResume();
+
+
     }
 }

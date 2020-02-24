@@ -39,8 +39,7 @@ public class MainActivity extends AppCompatActivity{
     private int pos;
     private DatabaseReference ref;
     private ArrayList<PeliFB> listaPelis;
-    private String tema;
-    private final String CLARO = "CLARO", OSCURO = "OSCURO";
+    private SharedPreferences SP;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,9 +112,6 @@ public class MainActivity extends AppCompatActivity{
             }
         };
         ref.addListenerForSingleValueEvent(postListener);
-
-        SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-        tema = SP.getBoolean("night_mode",false)? OSCURO : CLARO;
     }
 
     @Override
@@ -243,42 +239,22 @@ public class MainActivity extends AppCompatActivity{
             item.setTitle("Añadir a favoritos");
     }
 
-    public void reCreate() {
-        Bundle savedInstanceState = new Bundle();
-        //this is important to save all your open states/fragment states
-        onSaveInstanceState(savedInstanceState);
-        //this is needed to release the resources
-        super.onDestroy();
-
-        //call on create where new theme is applied
-        onCreate(savedInstanceState);//you can pass bundle arguments to skip your code/flows on this scenario
-    }
-
     @Override
     public Resources.Theme getTheme() {
         Resources.Theme theme = super.getTheme();
         SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        if(SP.getBoolean("night_mode", false))
+            theme.applyStyle(R.style.AppThemeDark, true);
+        else
+            theme.applyStyle(R.style.AppTheme, true);
 
-        if(SP.getBoolean("night_mode",false)){
-            if(tema == null)
-                tema = SP.getBoolean("night_mode",false)? OSCURO : CLARO;
-            else if(tema.equals(CLARO)) {
-                theme = super.getTheme();
-                theme.applyStyle(R.style.AppThemeDark, true);
-                reCreate();
-                Log.i("aaaaaaaaaa", "recargado");
-                tema = OSCURO;
-            }
-        }
-        else tema = CLARO;
-
+        //recreate();
         return theme;
     }
 
     @Override
     public void onResume() {
         super.onResume();
-
 
     }
 }
