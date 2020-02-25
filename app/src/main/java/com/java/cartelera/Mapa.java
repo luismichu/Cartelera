@@ -73,7 +73,7 @@ public class Mapa extends FragmentActivity implements OnMapReadyCallback {
             public void onSuccess(Location location) {
                 if (location != null) {
                     currentLocation = location;
-                    Toast.makeText(getApplicationContext(), currentLocation.getLatitude() + "" + currentLocation.getLongitude(), Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getApplicationContext(), currentLocation.getLatitude() + "" + currentLocation.getLongitude(), Toast.LENGTH_SHORT).show();
 
                     SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                             .findFragmentById(R.id.map);
@@ -101,8 +101,18 @@ public class Mapa extends FragmentActivity implements OnMapReadyCallback {
 
         MarkerOptions miPos = new MarkerOptions().position(latLng).title("Te encuentras aquí").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN));
         MarkerOptions markerOptions = new MarkerOptions().position(new LatLng(40.4, -3.75)).title("Otro sitio");
+        MarkerOptions cine1 = new MarkerOptions().position(new LatLng(40.416696, -3.704542)).title("Cine 1");
+        MarkerOptions cine2 = new MarkerOptions().position(new LatLng(40.414649, -3.708099)).title("Cine 2");
+        MarkerOptions cine3 = new MarkerOptions().position(new LatLng(40.409217, -3.710030)).title("Cine 3");
+        MarkerOptions cine4 = new MarkerOptions().position(new LatLng(40.405397, -3.701149)).title("Cine 4");
+        MarkerOptions cine5 = new MarkerOptions().position(new LatLng(40.422343, -3.691510)).title("Cine 5");
         map.addMarker(markerOptions);
         map.addMarker(miPos);
+        map.addMarker(cine1);
+        map.addMarker(cine2);
+        map.addMarker(cine3);
+        map.addMarker(cine4);
+        map.addMarker(cine5);
 
         //Define list to get all latlng for the route
         List<LatLng> path = new ArrayList();
@@ -118,6 +128,7 @@ public class Mapa extends FragmentActivity implements OnMapReadyCallback {
         String key = metadata.metaData.getString("com.google.android.geo.API_KEY");
         GeoApiContext context = new GeoApiContext.Builder()
                 .apiKey("AIzaSyD9flnxFwr66BZaKXT21YkdSt0Did4Vh-0")
+                //.apiKey("AIzaSyBVGDNtmE12yrHtoTS-ee1S-ruo_Ib4j54")
                 .build();
 
         DirectionsApiRequest req = DirectionsApi.getDirections(context, latLng.latitude+","+latLng.longitude, 40.4+","+ -3.75);
@@ -164,7 +175,7 @@ public class Mapa extends FragmentActivity implements OnMapReadyCallback {
 
         if (path.size() > 0) {
             PolylineOptions opts = new PolylineOptions().addAll(path).color(Color.BLUE).width(5);
-            map.addPolyline(opts);
+            //map.addPolyline(opts);
         }
     }
 

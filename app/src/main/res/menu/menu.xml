@@ -6,6 +6,9 @@
         android:id="@+id/itemConf"
         android:title="@string/configuraci_n" />
     <item
+        android:id="@+id/itemMapa"
+        android:title="Mapa" />
+    <item
         android:id="@+id/itemAnadirPeli"
         android:title="@string/a_adir_peli" />
     <item

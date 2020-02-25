@@ -1,12 +1,17 @@
 package com.java.cartelera;
 
 import android.app.AlertDialog;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.ContextMenu;
@@ -18,6 +23,8 @@ import android.widget.AdapterView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.preference.PreferenceManager;
 import androidx.viewpager.widget.ViewPager;
 
@@ -62,13 +69,6 @@ public class MainActivity extends AppCompatActivity{
                     PrincipalFragment.actualizar();
                 else
                     FavoritosFragment.actualizar();
-/*
-                SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-                String strUserName = SP.getString("username", "NA");
-                boolean bAppUpdates = SP.getBoolean("applicationUpdates",false);
-                String downloadType = SP.getString("downloadType","1");
-
-                Log.i("nombreusuario", strUserName);*/
             }
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
@@ -80,12 +80,6 @@ public class MainActivity extends AppCompatActivity{
 
         db = new DataBase(this);
         ref = FirebaseDatabase.getInstance().getReference();
-
-//        for(int i=0;i<10;i++)
-//            ref.child(String.valueOf(i)).setValue(new PeliFB(i, "Peli"+i, "Sinopsis"+i, "Fecha"+i, "Reparto"+i, i*100, false));
-
-//        for(PeliFB p : db.getPelis())
-//            db.eliminarFila(p);
 
         listaPelis = new ArrayList<>();
         ValueEventListener postListener = new ValueEventListener() {
@@ -128,8 +122,13 @@ public class MainActivity extends AppCompatActivity{
                 startActivity(conf);
                 return true;
 
+            case R.id.itemMapa:
+                Intent mapa = new Intent(this, Mapa.class);
+                startActivity(mapa);
+                return true;
+
             case R.id.itemAnadirPeli:
-                Intent insertarPeli = new Intent(MainActivity.this, Mapa.class);
+                Intent insertarPeli = new Intent(MainActivity.this, InsertarPeli.class);
                 startActivity(insertarPeli);
                 return true;
 
@@ -242,13 +241,53 @@ public class MainActivity extends AppCompatActivity{
     @Override
     public Resources.Theme getTheme() {
         Resources.Theme theme = super.getTheme();
-        SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        SP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         if(SP.getBoolean("night_mode", false))
             theme.applyStyle(R.style.AppThemeDark, true);
         else
             theme.applyStyle(R.style.AppTheme, true);
 
         return theme;
+    }
+
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        if(SP.getBoolean("notif", false)) {
+            Intent intent = new Intent(this, Mapa.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
+
+            NotificationManager mNotificationManager;
+
+            NotificationCompat.Builder mBuilder =
+                    new NotificationCompat.Builder(getApplicationContext(), "notify_001");
+
+            NotificationCompat.BigTextStyle bigText = new NotificationCompat.BigTextStyle();
+            bigText.setBigContentTitle("Pulsa para abrir el mapa con las ubicaciones");
+            bigText.setSummaryText("Mapa");
+
+            mBuilder.setContentIntent(pendingIntent);
+            mBuilder.setSmallIcon(R.mipmap.ic_launcher_round);
+            mBuilder.setContentTitle("Mapa");
+            mBuilder.setPriority(Notification.PRIORITY_DEFAULT);
+            mBuilder.setStyle(bigText);
+
+            mNotificationManager =
+                    (NotificationManager) this.getSystemService(MainActivity.NOTIFICATION_SERVICE);
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                String channelId = "Your_channel_id";
+                NotificationChannel channel = new NotificationChannel(
+                        channelId,
+                        "Channel human readable title",
+                        NotificationManager.IMPORTANCE_HIGH);
+                mNotificationManager.createNotificationChannel(channel);
+                mBuilder.setChannelId(channelId);
+            }
+
+            mNotificationManager.notify(0, mBuilder.build());
+        }
     }
 
     @Override
